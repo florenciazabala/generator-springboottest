@@ -1,6 +1,7 @@
 "use strict";
 const Generator = require("yeoman-generator");
 const path = require('path');
+const fs = require("fs");
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -9,6 +10,10 @@ module.exports = class extends Generator {
   }
 
   initializing() {
+    const readFile = function (file) {
+      return fs.readFileSync(file).toString();
+    };
+    this.log(readFile('banner.txt'));
     this.log("Generating Spring Boot Application");
   }
 
@@ -17,7 +22,7 @@ module.exports = class extends Generator {
       {
         type: "string",
         name: "appName",
-        message: "What is the application name?!?!",
+        message: "What is the application name?-",
         default: "myservice"
       },
       {
@@ -49,47 +54,16 @@ module.exports = class extends Generator {
       path.join(__dirname, '../../node_modules/gateway-ip-whitelist/**'),
       this.destinationPath('seed')
     );
-    /*const copyFiles = () => {
-      return new Promise((resolve, reject) => {
-        this.fs.copy(
-          path.join(__dirname, '../../node_modules/gateway-ip-whitelist/**'),
-          this.destinationPath('seed'),
-          console.log("Finish"),
-          (err) => {
-            if (err) {
-                console.log("Error");
-              reject(err);
-            } else {
-                console.log("Resolve");
-              resolve();
-            }
-          }
-        );
-      });
-    };
 
-    const copyTemplate = () => {
-      return new Promise((resolve, reject) => {
-        this.fs.copyTpl(
-          this.templatePath("../../../seed/templates/pom.xml.tpl"),
-          this.destinationPath("seed/pom.xml"),
-          {
-            appName: this.appName,
-            appType: this.appType
-          },
-          (err) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          }
-        );
-      });
-    };
-
-    copyFiles()
-      .then(() => copyTemplate());*/
+    this.fs.copyTpl(
+      this.templatePath("../../../seed/templates/pom.xml.tpl"),
+      this.destinationPath("seed/pom.xml"),
+      {
+        appName: this.configOptions.appName,
+        appType: this.configOptions.appType
+      }
+    );
+    
   }
 
   end() {

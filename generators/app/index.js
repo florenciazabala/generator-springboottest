@@ -13,7 +13,7 @@ module.exports = class extends Generator {
     const readFile = function (file) {
       return fs.readFileSync(file).toString();
     };
-    this.log(readFile('banner.txt'));
+    this.log(readFile('resources/banner.txt'));
     this.log("Generating Spring Boot Application");
   }
 
